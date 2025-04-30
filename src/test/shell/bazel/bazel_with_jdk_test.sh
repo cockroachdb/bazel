@@ -127,7 +127,10 @@ function test_bazel_license_prints_jdk_license() {
   expect_log "OPENJDK ASSEMBLY EXCEPTION" || \
       fail "'bazel license' did not print an expected string from ASSEMBLY_EXCEPTION"
 
-  expect_log "Provided you have not received the software directly from Azul and have already" || \
+#  expect_log "Provided you have not received the software directly from Azul and have already" || \
+# Azul JDK is not used on s390x
+# expect_log "Provided you have not received the software directly from Azul and have already" || \
+  expect_log "Linking this OpenJDK Code statically or dynamically with other code" || \
       fail "'bazel license' did not print an expected string from DISCLAIMER"
 
   expect_log '"CLASSPATH" EXCEPTION TO THE GPL' || \

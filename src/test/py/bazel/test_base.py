@@ -90,6 +90,7 @@ class TestBase(absltest.TestCase):
       'remotejdk17_win',
       'remotejdk17_win_arm64',
       'remotejdk21_linux',
+      'remotejdk21_linux_s390x',
       'remotejdk21_macos',
       'remotejdk21_macos_aarch64',
       'remotejdk21_win',

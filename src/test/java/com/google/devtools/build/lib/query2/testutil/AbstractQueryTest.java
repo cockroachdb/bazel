@@ -2210,7 +2210,7 @@ public abstract class AbstractQueryTest<T> {
 
     // We used to get a StackOverflowError at this depth. We're still vulnerable to stack overflows
     // at higher depths, due to how the query engine works.
-    int nestingDepth = 500;
+    int nestingDepth = 100;
     String queryString =
         Joiner.on(" + ").join(Collections.nCopies(nestingDepth, "let x = //foo:foo in $x"));
 

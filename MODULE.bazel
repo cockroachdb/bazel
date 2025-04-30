@@ -42,6 +42,12 @@ single_version_override(
     patches = ["//third_party:rules_jvm_external_6.0.patch"],
 )
 
+single_version_override(
+    module_name = "rules_graalvm",
+    patch_strip = 1,
+    patches = ["//third_party:rules_graalvm_fix.patch"],
+)
+
 local_path_override(
     module_name = "remoteapis",
     path = "./third_party/remoteapis",
@@ -251,6 +257,7 @@ use_repo(
     "remotejdk17_win",
     "remotejdk17_win_arm64",
     "remotejdk21_linux",
+    "remotejdk21_linux_s390x",
     "remotejdk21_macos",
     "remotejdk21_macos_aarch64",
     "remotejdk21_win",
@@ -261,12 +268,12 @@ use_repo(
 # =========================================
 
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
-python.toolchain(python_version = "3.8")
+python.toolchain(python_version = "3.10")
 
 pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
 pip.parse(
     hub_name = "bazel_pip_dev_deps",
-    python_version = "3.8",
+    python_version = "3.10",
     requirements_lock = "//:requirements.txt",
 )
 use_repo(pip, "bazel_pip_dev_deps")
@@ -344,6 +351,13 @@ http_file(
     executable = True,
     integrity = "sha256-6+zYQLpH779mgihoF4zHIaFRBgk396xAbj0xvQFb3pQ=",
     urls = ["https://github.com/jqlang/jq/releases/download/jq-1.5/jq-win64.exe"],
+)
+
+http_file(
+    name = "jq_linux_s390x",
+    executable = True,
+    integrity = "sha256-hot8PKdCJKAt22EyYd38LkOxLart1etYNz29x/LF+SQ=",
+    urls = ["https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-s390x"],
 )
 
 # =========================================
