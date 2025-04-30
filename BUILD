@@ -103,6 +103,7 @@ genrule(
         "MODULE.bazel",
         "//third_party/googleapis:MODULE.bazel",
         "//third_party/remoteapis:MODULE.bazel",
+        "//third_party:rules_graalvm_fix.patch",
         "//third_party:BUILD",
         "//third_party:rules_jvm_external_6.0.patch",
         "//third_party/upb:BUILD",
