@@ -83,9 +83,9 @@ def embedded_jdk_repositories():
     )
     http_file(
         name = "openjdk_linux_s390x_vanilla",
-        integrity = "sha256-UafKQswujLXz56MmwokS7oT/B5GhymZlCoxTrwdRCnw=",
+        integrity = "sha256-y0zI9SU4yaDivM2rXqXnyxsUwXMedS8fdkzMN2/LIiU=",
         downloaded_file_path = "adoptopenjdk-s390x-vanilla.tar.gz",
-        url = "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.5%2B11/OpenJDK21U-jdk_s390x_linux_hotspot_21.0.5_11.tar.gz",
+        url = "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.13.1%2B2/OpenJDK21U-jdk_s390x_linux_hotspot_21.0.13.1_2.tar.gz",
     )
     http_file(
         name = "openjdk_linux_ppc64le_vanilla",
