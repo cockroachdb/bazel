@@ -1064,6 +1064,7 @@ function test_runfiles_from_tests_get_reused_and_tmp_clean_in_mem_stashes() {
 
 function do_test_runfiles_from_tests_get_reused_and_tmp_clean() {
   local -r in_memory_stashes="$1"
+  add_rules_java "MODULE.bazel"
   mkdir pkg
   mkdir pkg/b
   touch pkg/file1.txt

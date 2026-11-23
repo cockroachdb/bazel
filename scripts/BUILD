@@ -47,6 +47,7 @@ filegroup(
     srcs = select({
         "@platforms//cpu:arm64": ["@jq_macos_arm64//file"],
         "@platforms//cpu:x86_64": ["@jq_macos_amd64//file"],
+	"//conditions:default": [],
     }),
 )
 

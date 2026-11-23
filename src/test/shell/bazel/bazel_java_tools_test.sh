@@ -131,7 +131,6 @@ function test_java_tools_has_JavaBuilder() {
 
 function test_java_tools_has_turbine_direct() {
   expect_path_in_java_tools "java_tools/turbine_direct_binary_deploy.jar"
-  expect_path_in_java_tools_prebuilt "java_tools/turbine_direct_graal"
 }
 
 function test_java_tools_has_one_version() {

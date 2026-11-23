@@ -227,9 +227,15 @@ genrule(
     srcs = [
         ":embedded_jdk_vanilla",
         ":jdeps_modules.golden",
-    ],
+    ] + select({
+        "//src/conditions:linux_s390x": ["@openjdk_linux_s390x_jmods//file"],
+        "//conditions:default": [],
+    }),
     outs = ["minimal_jdk.zip"],
-    cmd = "$(location :minimize_jdk) $(location :jdk_for_jlink) $(location :embedded_jdk_vanilla) $(location :jdeps_modules.golden) $@",
+    cmd = "$(location :minimize_jdk) $(location :jdk_for_jlink) $(location :embedded_jdk_vanilla) $(location :jdeps_modules.golden) $@" + select({
+        "//src/conditions:linux_s390x": " $(location @openjdk_linux_s390x_jmods//file)",
+        "//conditions:default": "",
+    }),
     tools = [
         ":jdk_for_jlink",
         ":minimize_jdk",
@@ -242,9 +248,15 @@ genrule(
     srcs = [
         ":embedded_jdk_vanilla",
         ":jdeps_modules.golden",
-    ],
+    ] + select({
+        "//src/conditions:linux_s390x": ["@openjdk_linux_s390x_jmods//file"],
+        "//conditions:default": [],
+    }),
     outs = ["allmodules_jdk.zip"],
-    cmd = "$(location :minimize_jdk) --allmodules $(location :jdk_for_jlink) $(location :embedded_jdk_vanilla) $(location :jdeps_modules.golden) $@",
+    cmd = "$(location :minimize_jdk) --allmodules $(location :jdk_for_jlink) $(location :embedded_jdk_vanilla) $(location :jdeps_modules.golden) $@" + select({
+        "//src/conditions:linux_s390x": " $(location @openjdk_linux_s390x_jmods//file)",
+        "//conditions:default": "",
+    }),
     tools = [
         ":jdk_for_jlink",
         ":minimize_jdk",
@@ -269,7 +281,8 @@ genrule(
         ":embedded_tools" + suffix + "_srcs",
     ],
     outs = ["embedded_tools" + suffix + ".zip"],
-    cmd = "$(location :create_embedded_tools) \"$@\" $(location :embedded_tools" + suffix + "_params)",
+    # s390x: zlib hardware deflate (DFLTCC) is not reproducible when run in parallel; Python zipfile uses it.
+    cmd = "DFLTCC=0 $(location :create_embedded_tools) \"$@\" $(location :embedded_tools" + suffix + "_params)",
     tools = [":create_embedded_tools"],
 ) for suffix in [
     "_jdk_allmodules",
@@ -548,13 +561,6 @@ release_archive(
     ],
 )
 
-release_archive(
-    name = "turbine_direct_graal_zip",
-    srcs = ["//src/java_tools/buildjar/java/com/google/devtools/build/java/turbine:turbine_direct_graal"],
-    package_dir = "java_tools",
-    visibility = ["//visibility:private"],
-)
-
 # Following target builds java_tools_prebuilt.zip part of java_tools
 release_archive(
     name = "java_tools_prebuilt_zip",
@@ -563,7 +569,6 @@ release_archive(
     },
     visibility = ["//src/test/shell/bazel:__pkg__"],
     deps = [
-        ":turbine_direct_graal_zip",
         "//src/tools/one_version:one_version_deploy_zip",
         "//src/tools/singlejar:singlejar_deploy_zip",
         "//third_party/ijar:ijar_deploy_zip",

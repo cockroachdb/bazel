@@ -17,6 +17,8 @@ java_test(
     size = "medium",
     srcs = glob(["*.java"]),
     jvm_flags = [
+	"-Xss2m",
+        "-XX:ThreadStackSize=2048",
         "-Djava.lang.Thread.allowVirtualThreads=true",
     ],
     shard_count = 10,

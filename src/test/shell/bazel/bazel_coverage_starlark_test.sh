@@ -59,6 +59,7 @@ function set_up() {
 }
 
 function test_starlark_rule_without_lcov_merger() {
+    add_rules_java "MODULE.bazel"
     cat <<EOF > rules.bzl
 UNIX_TEST = """
 #!/usr/bin/env bash
@@ -141,6 +142,7 @@ EOF
 
 function test_starlark_rule_with_custom_lcov_merger() {
     add_rules_shell "MODULE.bazel"
+    add_rules_java "MODULE.bazel"
     cat <<EOF > lcov_merger.sh
 for var in "\$@"
 do
@@ -194,6 +196,7 @@ EOF
 
 function test_starlark_rule_with_configuration_field_lcov_merger_coverage_enabled() {
     add_rules_shell "MODULE.bazel"
+    add_rules_java "MODULE.bazel"
     cat <<EOF > lcov_merger.sh
 for var in "\$@"
 do
@@ -286,6 +289,7 @@ EOF
 }
 
 function test_starlark_rule_default_baseline_coverage() {
+  add_rules_java "MODULE.bazel"
   mkdir -p test
   cat <<EOF > test/rules.bzl
 def _my_library_impl(ctx):
@@ -483,6 +487,7 @@ end_of_record"
 }
 
 function do_test_starlark_rule_custom_baseline_coverage() {
+  add_rules_java "MODULE.bazel"
   mkdir -p test
   cat <<EOF > test/rules.bzl
 def _my_library_impl(ctx):

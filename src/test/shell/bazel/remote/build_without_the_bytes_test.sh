@@ -599,6 +599,7 @@ function test_download_toplevel_test_rule() {
   # a build command.
 
   add_rules_cc MODULE.bazel
+  add_rules_java MODULE.bazel
   mkdir -p a
   cat > a/BUILD <<EOF
 load("@rules_cc//cc:cc_test.bzl", "cc_test")

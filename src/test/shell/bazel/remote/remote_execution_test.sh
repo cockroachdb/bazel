@@ -2440,6 +2440,7 @@ function test_cc_rbe_coverage_produces_report() {
   gcov --help | grep "\-i," || return 0
 
   add_rules_cc "MODULE.bazel"
+  add_rules_java "MODULE.bazel"
   local test_dir="a/cc/coverage_test"
   mkdir -p $test_dir
 

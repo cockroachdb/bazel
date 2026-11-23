@@ -69,64 +69,6 @@ alias(
     }),
 )
 
-native_image(
-    name = "turbine_direct_graal_unpatched",
-    executable_name = select({
-        # TODO(cushon): restore .exe suffix on windows
-        # see https://github.com/sgammon/rules_graalvm/issues/324
-        "@bazel_tools//src/conditions:windows": "turbine_direct_graal_unpatched",
-        "//conditions:default": "turbine_direct_graal",
-    }),
-    extra_args = [
-        # Opt into stricter behavior to squelch a warning on recent GraalVM versions.
-        "--strict-image-heap",
-        # Workaround for https://github.com/oracle/graal/issues/4757.
-        "-H:-UseContainerSupport",
-        # A benchmark on Bazel itself shows a ~15% improvement in combined compile and header
-        # compile action time on an incremental build triggered by a signature change to Label with
-        # this option. 256m provides a noticeably smaller improvement, higher values do not provide
-        # further improvement and would go over the local resource estimate in
-        # com.google.devtools.build.lib.rules.java.JavaCompileAction.LOCAL_RESOURCES.
-        # See :turbine_benchmark for the benchmark script used.
-        "-R:MinHeapSize=512m",
-    ] + select({
-        "@platforms//os:linux": [
-            # Statically link zlib but not glibc.
-            "-H:+StaticExecutableWithDynamicLibC",
-        ],
-        "@platforms//os:windows": [
-            # The charset specified by sun.jnu.encoding is not automatically included in the image,
-            # but may be one of the legacy code pages on Windows, which aren't added by default.
-            # https://github.com/oracle/graal/pull/10232
-            "-H:+AddAllCharsets",
-        ],
-        "//conditions:default": [],
-    }) + select({
-        "@platforms//cpu:x86_64": [
-            # Graal's default settings result in executables that aren't sufficiently compatible for
-            # general use in Bazel.
-            "-march=x86-64-v2",
-        ],
-        "//conditions:default": [],
-    }) + select({
-        ":do_pgo_instrument": ["--pgo-instrument"],
-        "//conditions:default": [],
-    }),
-    main_class = _TURBINE_MAIN_CLASS,
-    native_image_tool = select({
-        ":do_use_oracle_graalvm": "@graalvm_oracle//:native-image",
-        "//conditions:default": None,
-    }),
-    profiles = select({
-        ":do_pgo_instrument": [],
-        ":do_use_oracle_graalvm": ["profile.iprof"],
-        "//conditions:default": [],
-    }),
-    # This provides libz.a on Linux instead of the host system.
-    static_zlib = "@zlib",
-    deps = [":turbine_deps"],
-)
-
 # On Windows, add an app manifest to the binary to force it to run with a UTF-8
 # code page. It is built with one, but without the app manifest it will not be
 # able to use UTF-8 for filesystem operations.

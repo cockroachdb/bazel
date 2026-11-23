@@ -208,6 +208,7 @@ EOF
 
 function test_coverage() {
   add_rules_shell "MODULE.bazel"
+  add_rules_java "MODULE.bazel"
 
   cat > BUILD <<'EOF'
 load("@rules_shell//shell:sh_test.bzl", "sh_test")

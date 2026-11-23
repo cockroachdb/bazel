@@ -590,6 +590,57 @@ function add_rules_shell() {
 
 function add_rules_java() {
   add_bazel_dep "rules_java" "$1"
+
+  local workspace_dir
+  workspace_dir="$(dirname "$1")"
+
+  mkdir -p "${workspace_dir}/tp"
+  touch "${workspace_dir}/tp/BUILD"
+
+cat > "${workspace_dir}/tp/rules_java_module.patch" << 'PATCH'
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -100,6 +100,7 @@
+     "25": [
+         "linux",
+         "linux_aarch64",
++        "linux_s390x",
+         "macos",
+         "macos_aarch64",
+         "win",
+PATCH
+
+cat > "${workspace_dir}/tp/rules_java_repos.patch" << 'PATCH'
+--- a/java/repositories.bzl
++++ b/java/repositories.bzl
+@@ -378,6 +378,14 @@
+         urls = ["https://cdn.azul.com/zulu/bin/zulu25.30.17-ca-jdk25.0.1-win_x64.zip", "https://mirror.bazel.build/cdn.azul.com/zulu/bin/zulu25.30.17-ca-jdk25.0.1-win_x64.zip"],
+         version = "25",
+     ),
++    struct(
++        name = "remotejdk25_linux_s390x",
++        target_compatible_with = ["@platforms//os:linux", "@platforms//cpu:s390x"],
++        sha256 = "15e5cbcadcf3d43623c31b825063cdc2817b9f1ba840b51dc6ef70e5d33c84e3",
++        strip_prefix = "jdk-25.0.2+10",
++        urls = ["https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2+10/OpenJDK25U-jdk_s390x_linux_hotspot_25.0.2_10.tar.gz", "https://mirror.bazel.build/github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2+10/OpenJDK25U-jdk_s390x_linux_hotspot_25.0.2_10.tar.gz"],
++        version = "25",
++    ),
+ ]
+
+ def _make_version_to_remote_jdks():
+PATCH
+
+  cat >> "$1" <<EOF
+single_version_override(
+    module_name = "rules_java",
+    version = "9.1.0",
+    patches = [
+        "//tp:rules_java_module.patch",
+        "//tp:rules_java_repos.patch",
+    ],
+    patch_strip = 1,
+)
+EOF
 }
 
 function add_rules_python() {
@@ -611,6 +662,44 @@ function add_protobuf() {
 bazel_dep(name = "protobuf", version = "$protobuf_version", repo_name = "com_google_protobuf")
 # Fixes compilation errors with old C++ compiler versions.
 bazel_dep(name = "abseil-cpp", version = "$abseil_version", repo_name = None)
+EOF
+
+  local workspace_dir
+  workspace_dir="$(dirname "$1")"
+
+  mkdir -p "${workspace_dir}/third_party"
+  touch "${workspace_dir}/third_party/BUILD"
+
+cat > "${workspace_dir}/third_party/protobuf.patch" << 'PATCH'
+--- a/upb/wire/decode.c
++++ b/upb/wire/decode.c
+@@ -488,6 +488,7 @@ static const char* _upb_Decoder_DecodeEnumPacked(
+       _upb_Decoder_AddEnumValueToUnknown(d, msg, field, &elem);
+       continue;
+     }
++    _upb_Decoder_MungeInt32(&elem);
+     if (_upb_Decoder_Reserve(d, arr, 1)) {
+       out = UPB_PTR_AT(upb_Array_MutableDataPtr(arr),
+                        arr->UPB_PRIVATE(size) * 4, void);
+@@ -1079,6 +1080,7 @@ const char* _upb_Decoder_DecodeWireValue(upb_Decoder* d, const char* ptr,
+           *op = kUpb_DecodeOp_UnknownField;
+           return ptr;
+         }
++        _upb_Decoder_MungeInt32(val);
+       } else {
+         _upb_Decoder_Munge(field, val);
+       }
+PATCH
+
+  cat >> "$1" <<EOF
+single_version_override(
+    module_name = "protobuf",
+    version = "33.4",
+    patches = [
+        "//third_party:protobuf.patch",
+    ],
+    patch_strip = 1,
+)
 EOF
 }
 

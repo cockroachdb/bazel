@@ -203,6 +203,7 @@ EOF
 
 function test_coverage_env_vars_can_be_overridden() {
   add_rules_cc "MODULE.bazel"
+  add_rules_java "MODULE.bazel"
   mkdir -p foo
 
   cat > foo/print_coverage_env.cc <<'EOF'

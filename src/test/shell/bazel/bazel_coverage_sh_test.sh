@@ -155,6 +155,7 @@ function test_sh_test_coverage_cc_binary() {
 
   add_rules_cc "MODULE.bazel"
   add_rules_shell "MODULE.bazel"
+  add_rules_java "MODULE.bazel"
 
   ########### Setup source files and BUILD file ###########
   cat <<EOF > BUILD
@@ -519,6 +520,8 @@ end_of_record"
 
 function test_coverage_as_tree_artifact() {
   add_rules_shell "MODULE.bazel"
+  add_rules_java "MODULE.bazel"
+
   cat <<'EOF' > BUILD
 load("@rules_shell//shell:sh_test.bzl", "sh_test")
 

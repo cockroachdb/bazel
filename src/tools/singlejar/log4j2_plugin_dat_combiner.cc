@@ -40,12 +40,16 @@
 // specification.
 template <typename T>
 inline static T swapByteOrder(const T &val) {
+#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+  return val;
+#else
   int totalBytes = sizeof(val);
   T swapped = (T)0;
   for (int i = 0; i < totalBytes; ++i) {
     swapped |= (val >> (8 * (totalBytes - i - 1)) & 0xFF) << (8 * i);
   }
   return swapped;
+#endif
 }
 
 bool readBool(std::istringstream &stream) {

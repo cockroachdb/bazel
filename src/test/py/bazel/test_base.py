@@ -166,6 +166,103 @@ class TestBase(absltest.TestCase):
         ],
         mode='a',
     )
+    if module == 'rules_java':
+        self._AddRulesJavaS390xPatch(path, version)
+    if module == 'protobuf':
+        self._AddProtobufS390xPatch(path, version)
+
+  def _AddRulesJavaS390xPatch(self, path='', version=''):
+    self.ScratchFile(os.path.join(path, 'third_party/BUILD'), [])
+    self.ScratchFile(
+        os.path.join(path, 'third_party/rules_java_module.patch'),
+        [
+            '--- a/MODULE.bazel',
+            '+++ b/MODULE.bazel',
+            '@@ -100,6 +100,7 @@',
+            '     "25": [',
+            '         "linux",',
+            '         "linux_aarch64",',
+            '+        "linux_s390x",',
+            '         "macos",',
+            '         "macos_aarch64",',
+            '         "win",',
+        ],
+    )
+    self.ScratchFile(
+        os.path.join(path, 'third_party/rules_java_repos.patch'),
+        [
+            '--- a/java/repositories.bzl',
+            '+++ b/java/repositories.bzl',
+            '@@ -380,3 +380,11 @@',
+            '         version = "25",',
+            '     ),',
+            '-]',
+            '+    struct(',
+            '+        name = "remotejdk25_linux_s390x",',
+            '+        target_compatible_with = ["@platforms//os:linux", "@platforms//cpu:s390x"],',
+            '+        sha256 = "15e5cbcadcf3d43623c31b825063cdc2817b9f1ba840b51dc6ef70e5d33c84e3",',
+            '+        strip_prefix = "jdk-25.0.2+10",',
+            '+        urls = ["https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2+10/OpenJDK25U-jdk_s390x_linux_hotspot_25.0.2_10.tar.gz", "https://mirror.bazel.build/github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2+10/OpenJDK25U-jdk_s390x_linux_hotspot_25.0.2_10.tar.gz"],',
+            '+        version = "25",',
+            '+    ),',
+            '+]',
+        ],
+    )
+    self.ScratchFile(
+        os.path.join(path, 'MODULE.bazel'),
+        [
+            'single_version_override(',
+            '    module_name = "rules_java",',
+            f'    version = "{version}",',
+            '    patches = [',
+            '        "//third_party:rules_java_module.patch",',
+            '        "//third_party:rules_java_repos.patch",',
+            '    ],',
+            '    patch_strip = 1,',
+            ')',
+        ],
+        mode='a',
+    )
+
+  def _AddProtobufS390xPatch(self, path='', version=''):
+    self.ScratchFile(os.path.join(path, 'third_party/BUILD'), [])
+    self.ScratchFile(
+        os.path.join(path, 'third_party/protobuf.patch'),
+        [
+            '--- a/upb/wire/decode.c',
+            '+++ b/upb/wire/decode.c',
+            '@@ -488,6 +488,7 @@ static const char* _upb_Decoder_DecodeEnumPacked(',
+            '       _upb_Decoder_AddEnumValueToUnknown(d, msg, field, &elem);',
+            '       continue;',
+            '     }',
+            '+    _upb_Decoder_MungeInt32(&elem);',
+            '     if (_upb_Decoder_Reserve(d, arr, 1)) {',
+            '       out = UPB_PTR_AT(upb_Array_MutableDataPtr(arr),',
+            '                        arr->UPB_PRIVATE(size) * 4, void);',
+            '@@ -1079,6 +1080,7 @@ const char* _upb_Decoder_DecodeWireValue(upb_Decoder* d, const char* ptr,',
+            '           *op = kUpb_DecodeOp_UnknownField;',
+            '           return ptr;',
+            '         }',
+            '+        _upb_Decoder_MungeInt32(val);',
+            '       } else {',
+            '         _upb_Decoder_Munge(field, val);',
+            '       }',
+        ],
+    )
+    self.ScratchFile(
+        os.path.join(path, 'MODULE.bazel'),
+        [
+            'single_version_override(',
+            '    module_name = "protobuf",',
+            f'    version = "{version}",',
+            '    patches = [',
+            '        "//third_party:protobuf.patch",',
+            '    ],',
+            '    patch_strip = 1,',
+            ')',
+        ],
+        mode='a',
+    )
 
   def tearDown(self):
     self.RunBazel(['shutdown'])

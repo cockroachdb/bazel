@@ -170,6 +170,7 @@ function test_py_test_coverage_cc_binary() {
 
   add_rules_python "MODULE.bazel"
   add_rules_cc "MODULE.bazel"
+  add_rules_java "MODULE.bazel"
 
   ########### Setup source files and BUILD file ###########
   cat <<EOF > BUILD

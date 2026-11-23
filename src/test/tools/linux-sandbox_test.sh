@@ -88,15 +88,19 @@ test_mounts_non_hermetic_netns() {
 }
 
 test_mounts_hermetic_no_netns() {
+  local lib64_mounts=()
+  [ -d /lib64 ] && lib64_mounts=(-M /lib64 -m /lib64)
   "${LINUX_SANDBOX}" -W "${TEST_TMPDIR}/root/work" -h "${TEST_TMPDIR}/root" \
-    -M /bin -m /bin -M /lib -m /lib -M /lib64 -m /lib64 -M /usr -m /usr \
+    -M /bin -m /bin -M /lib -m /lib "${lib64_mounts[@]}" -M /usr -m /usr \
     -- /bin/sh -c "${VERIFICATION_SCRIPT}" \
     &> "$TEST_log" || fail "sandbox not set up correctly"
 }
 
 test_mounts_hermetic_netns() {
+  local lib64_mounts=()
+  [ -d /lib64 ] && lib64_mounts=(-M /lib64 -m /lib64)
   "${LINUX_SANDBOX}" -n -W "${TEST_TMPDIR}/root/work" -h "${TEST_TMPDIR}/root" \
-    -M /bin -m /bin -M /lib -m /lib -M /lib64 -m /lib64 -M /usr -m /usr \
+    -M /bin -m /bin -M /lib -m /lib "${lib64_mounts[@]}" -M /usr -m /usr \
     -- /bin/sh -c "${VERIFICATION_SCRIPT}" \
     &> "$TEST_log" || fail "sandbox not set up correctly"
 }

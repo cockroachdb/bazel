@@ -44,6 +44,11 @@ EOF
 }
 
 function do_test_profiler_enabled() {
+  if [[ "$(uname -m)" == "s390x" ]]; then
+    echo "Skipping: async-profiler not supported on s390x"
+    return 0
+  fi
+
   local -r type="$1"
 
   cat > BUILD <<'EOF'

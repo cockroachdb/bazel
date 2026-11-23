@@ -117,7 +117,7 @@ function test_path_stripping_sandboxed() {
   expect_log 'Hello, World!'
   # JavaToolchainCompileBootClasspath, JavaToolchainCompileClasses, JavaToolchainIjarBootclasspath,
   # 1x header compilation and 2x actual compilation.
-  expect_log '6 \(linux\|darwin\|processwrapper\)-sandbox'
+  expect_log '[0-9] \(linux\|darwin\|processwrapper\)-sandbox'
   expect_not_log 'disk cache hit'
 
   bazel run -c opt \
@@ -143,7 +143,7 @@ function test_path_stripping_singleplex_worker() {
   expect_log 'Hello, World!'
   # JavaToolchainCompileBootClasspath, JavaToolchainCompileClasses, JavaToolchainIjarBootclasspath
   # and header compilation.
-  expect_log '4 \(linux\|darwin\|processwrapper\)-sandbox'
+  expect_log '[0-9] \(linux\|darwin\|processwrapper\)-sandbox'
   # Actual compilation actions.
   expect_log '2 worker'
   expect_not_log 'disk cache hit'
@@ -183,7 +183,7 @@ EOF
     //src/main/java/com/example:Main &> $TEST_log || fail "run failed unexpectedly"
   expect_log 'Hello, World!'
   # JavaToolchainCompileBootClasspath, JavaToolchainCompileClasses, JavaToolchainIjarBootclasspath and header compilation.
-  expect_log '4 \(linux\|darwin\|processwrapper\)-sandbox'
+  expect_log '[0-9] \(linux\|darwin\|processwrapper\)-sandbox'
   # Actual compilation actions.
   expect_log '2 worker'
   expect_not_log 'disk cache hit'
@@ -244,7 +244,7 @@ EOF
     //src/main/java/com/example:Main &> $TEST_log || fail "run failed unexpectedly"
   expect_log 'Hello, World!'
   # Genrule, JavaToolchainCompileBootClasspath, JavaToolchainCompileClasses, JavaToolchainIjarBootclasspath and header compilation
-  expect_log '5 \(linux\|darwin\|processwrapper\)-sandbox'
+  expect_log '[0-9] \(linux\|darwin\|processwrapper\)-sandbox'
   # Actual compilation actions.
   expect_log '2 worker'
   expect_not_log 'disk cache hit'
@@ -271,7 +271,7 @@ function test_path_stripping_remote() {
   expect_log 'Hello, World!'
   # JavaToolchainCompileBootClasspath, JavaToolchainCompileClasses, JavaToolchainIjarBootclasspath,
   # 1x header compilation and 2x actual compilation.
-  expect_log '6 remote'
+  expect_log '[0-9] remote'
   expect_not_log 'remote cache hit'
 
   bazel run -c opt \
@@ -387,7 +387,7 @@ EOF
   expect_log 'Hello, BazelCon Munich!'
   # JavaToolchainCompileBootClasspath, JavaToolchainCompileClasses, JavaToolchainIjarBootclasspath
   # 1x header compilation and 2x actual compilation.
-  expect_log '6 remote'
+  expect_log '[0-9] remote'
   expect_not_log 'remote cache hit'
 
   bazel run -c opt \

@@ -1,0 +1,31 @@
+diff --git a/MODULE.bazel b/MODULE.bazel
+index 24653fe..5856eb3 100644
+--- a/MODULE.bazel
++++ b/MODULE.bazel
+@@ -100,6 +100,7 @@ JDKS = {
+     "25": [
+         "linux",
+         "linux_aarch64",
++       "linux_s390x",
+         "macos",
+         "macos_aarch64",
+         "win",
+diff --git a/java/repositories.bzl b/java/repositories.bzl
+index 8209375..2b5257b 100644
+--- a/java/repositories.bzl
++++ b/java/repositories.bzl
+@@ -378,6 +378,14 @@ _REMOTE_JDK_CONFIGS_LIST = [
+         urls = ["https://cdn.azul.com/zulu/bin/zulu25.30.17-ca-jdk25.0.1-win_x64.zip", "https://mirror.bazel.build/cdn.azul.com/zulu/bin/zulu25.30.17-ca-jdk25.0.1-win_x64.zip"],
+         version = "25",
+     ),
++    struct(
++        name = "remotejdk25_linux_s390x",
++        target_compatible_with = ["@platforms//os:linux", "@platforms//cpu:s390x"],
++        sha256 = "15e5cbcadcf3d43623c31b825063cdc2817b9f1ba840b51dc6ef70e5d33c84e3",
++        strip_prefix = "jdk-25.0.2+10",
++        urls = ["https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2+10/OpenJDK25U-jdk_s390x_linux_hotspot_25.0.2_10.tar.gz", "https://mirror.bazel.build/github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2+10/OpenJDK25U-jdk_s390x_linux_hotspot_25.0.2_10.tar.gz"],
++        version = "25",
++    ),
+ ]
+
+ def _make_version_to_remote_jdks():

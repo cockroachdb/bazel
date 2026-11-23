@@ -133,6 +133,12 @@ def embedded_jdk_repositories():
         downloaded_file_path = "zulu-win-arm64.zip",
         url = "https://cdn.azul.com/zulu/bin/zulu25.38.201-ca-jdk25.0.5.1-win_aarch64.zip",
     )
+    http_file(
+        name = "openjdk_linux_s390x_jmods",
+        integrity = "sha256-q+ojr8SqMWGRMZWCfyBcJw6zaJTCfjhoLHEaTDmAJ4k=",
+        downloaded_file_path = "temurin-linux-s390x-jmods.zip",
+        url = "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2%2B10/OpenJDK25U-jmods_s390x_linux_hotspot_25.0.2_10.tar.gz",
+    )
 
 def _async_profiler_repos(ctx):
     http_file(

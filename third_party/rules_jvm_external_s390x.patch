@@ -1,0 +1,19 @@
+diff --git a/private/rules/jvm_import.bzl b/private/rules/jvm_import.bzl
+--- a/private/rules/jvm_import.bzl
++++ b/private/rules/jvm_import.bzl
+@@ -39,6 +39,7 @@
+             inputs = [injar],
+             outputs = [outjar],
+             mnemonic = "StampJarManifest",
++            env = {"DFLTCC": "0"},
+             progress_message = "Stamping the manifest of %{label}",
+         )
+     else:
+@@ -65,6 +66,7 @@
+         inputs = [outjar],
+         outputs = [compilejar],
+         mnemonic = "CreateCompileJar",
++        env = {"DFLTCC": "0"},
+         progress_message = "Creating compile jar for %s" % ctx.label,
+     )
+ 

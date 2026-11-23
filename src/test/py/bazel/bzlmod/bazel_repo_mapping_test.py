@@ -442,6 +442,7 @@ source "${RUNFILES_DIR:-/dev/null}/$f" 2>/dev/null || \
     )
 
     self.ScratchFile('MODULE.bazel', ['bazel_dep(name="test",version="1.0")'])
+    self._AddRulesJavaS390xPatch('', self.GetModuleVersionFromDefaultLockFile('rules_java'))
 
     # Run sandboxed on Linux and macOS.
     self.RunBazel(

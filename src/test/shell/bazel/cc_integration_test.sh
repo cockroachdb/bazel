@@ -1769,6 +1769,7 @@ EOF
 function test_cc_test_no_target_coverage_dep() {
   # Regression test for https://github.com/bazelbuild/bazel/issues/16961
   add_rules_cc "MODULE.bazel"
+  add_rules_java "MODULE.bazel"
   cat >> MODULE.bazel <<'EOF'
 remote_coverage_tools_extension = use_extension("@bazel_tools//tools/test:extensions.bzl", "remote_coverage_tools_extension")
 use_repo(remote_coverage_tools_extension, "remote_coverage_tools")
@@ -1795,6 +1796,7 @@ EOF
 
 function test_cc_test_no_coverage_tools_dep_without_coverage() {
   add_rules_cc "MODULE.bazel"
+  add_rules_java "MODULE.bazel"
 
   cat >> MODULE.bazel <<'EOF'
 remote_coverage_tools_extension = use_extension("@bazel_tools//tools/test:extensions.bzl", "remote_coverage_tools_extension")

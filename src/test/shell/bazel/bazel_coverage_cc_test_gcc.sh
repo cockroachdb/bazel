@@ -31,6 +31,7 @@ fi
 
 function set_up() {
   add_rules_cc "MODULE.bazel"
+  add_rules_java "MODULE.bazel"
 }
 
 # Writes the C++ source files and a corresponding BUILD file for which to
@@ -964,6 +965,7 @@ local_repository(
 )
 EOF
   add_rules_cc "MODULE.bazel"
+  add_rules_java "MODULE.bazel"
 
   cat > BUILD <<'EOF'
 load("@rules_cc//cc:cc_library.bzl", "cc_library")

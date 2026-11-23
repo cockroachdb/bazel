@@ -31,6 +31,7 @@ fi
 
 function set_up() {
   add_rules_cc "MODULE.bazel"
+  add_rules_java "MODULE.bazel"
 }
 
 # Configures Bazel to emit coverage using LLVM tools, returning a non-zero exit
@@ -208,7 +209,6 @@ end_of_record"
 
 function test_cc_test_with_runtime_objects_not_in_runfiles() {
   setup_llvm_coverage_tools_for_lcov || return 0
-  add_rules_java "MODULE.bazel"
 
   cat << EOF > BUILD
 load("@rules_java//java:java_binary.bzl", "java_binary")
@@ -357,6 +357,7 @@ EOF
 function test_external_cc_target_can_collect_coverage() {
   setup_llvm_coverage_tools_for_lcov || return 0
   setup_external_cc_target
+  add_rules_java "MODULE.bazel"
 
   bazel coverage --combined_report=lcov --test_output=all \
     @other_repo//:t --instrumentation_filter=// &>$TEST_log || fail "Coverage for @other_repo//:t failed"
@@ -410,6 +411,7 @@ end_of_record'
 function test_external_cc_target_coverage_not_collected_by_default() {
   setup_llvm_coverage_tools_for_lcov || return 0
   setup_external_cc_target
+  add_rules_java "MODULE.bazel"
 
   bazel coverage --combined_report=lcov --test_output=all \
     @other_repo//:t &>$TEST_log || fail "Coverage for @other_repo//:t failed"
