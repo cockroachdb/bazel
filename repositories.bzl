@@ -98,6 +98,12 @@ def embedded_jdk_repositories():
         url = "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2%2B10/OpenJDK25U-jdk_ppc64le_linux_hotspot_25.0.2_10.tar.gz",
     )
     http_file(
+        name = "openjdk_linux_ppc64le_jmods",
+        integrity = "sha256-W3P7xE657UuuWvmeZYAOY/T1l0J0qJh461eoXMkuLO4=",
+        downloaded_file_path = "temurin-linux-ppc64le-jmods.tar.gz",
+        url = "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.2%2B10/OpenJDK25U-jmods_ppc64le_linux_hotspot_25.0.2_10.tar.gz",
+    )
+    http_file(
         name = "openjdk_linux_riscv64_vanilla",
         integrity = "sha256-FoEZ5PujUPTms8qSRQorkKhQK4miNaBEFemt+fXTFk4=",
         downloaded_file_path = "adoptopenjdk-riscv64-vanilla.tar.gz",
